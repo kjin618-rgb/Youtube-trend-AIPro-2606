@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ThumbsUp, MessageSquare, ChevronDown } from "lucide-react";
 import type { YouTubeComment } from "@/types/youtube";
+import CommentAnalysis from "@/components/CommentAnalysis";
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -52,6 +53,7 @@ export default function CommentList({
 
   return (
     <div>
+      <CommentAnalysis comments={comments} />
       <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
         <MessageSquare size={20} className="text-red-500" />
         댓글 {totalCount.toLocaleString()}개
