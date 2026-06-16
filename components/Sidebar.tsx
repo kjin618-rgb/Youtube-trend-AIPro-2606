@@ -12,8 +12,8 @@ import ApiKeyButton from "./ApiKeyButton";
 const NAV = [
   { href: "/", icon: TrendingUp, label: "급상승 TOP 100", ready: true },
   { href: "/keyword", icon: Hash, label: "키워드 분석", ready: false },
-  { href: "/categories", icon: LayoutGrid, label: "카테고리 비교", ready: false },
-  { href: "/trends", icon: Flame, label: "트렌드 키워드", ready: false },
+  { href: "/categories", icon: LayoutGrid, label: "카테고리 비교", ready: true },
+  { href: "/trends", icon: Flame, label: "트렌드 키워드", ready: true },
   { href: "/channel", icon: Tv2, label: "채널 분석", ready: false },
   { href: "/competitors", icon: GitCompare, label: "경쟁 채널 비교", ready: false },
 ];

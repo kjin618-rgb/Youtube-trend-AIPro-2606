@@ -1,9 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Eye, ThumbsUp, LayoutGrid } from "lucide-react";
+import { Eye, ThumbsUp } from "lucide-react";
 import type { YouTubeVideo } from "@/types/youtube";
-import { YOUTUBE_CATEGORIES } from "@/types/youtube";
 
 function safeInt(s: string): number {
   const n = parseInt(s || "0", 10);
@@ -94,37 +93,19 @@ export default function TrendCharts({ videos }: { videos: YouTubeVideo[] }) {
     .sort((a, b) => b.value - a.value)
     .slice(0, 10);
 
-  const catCount: Record<string, number> = {};
-  for (const v of videos) {
-    const name = YOUTUBE_CATEGORIES[v.categoryId] ?? "기타";
-    catCount[name] = (catCount[name] || 0) + 1;
-  }
-  const catItems = Object.entries(catCount)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8)
-    .map(([label, count]) => ({ label, value: count, display: `${count}개` }));
-
   return (
-    <div className="mb-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <HBarChart
-          title="조회수 TOP 10"
-          icon={<Eye size={14} className="text-red-500" />}
-          items={viewTop10}
-          barColor="bg-red-400"
-        />
-        <HBarChart
-          title="좋아요율 TOP 10"
-          icon={<ThumbsUp size={14} className="text-amber-500" />}
-          items={likeRateTop10}
-          barColor="bg-amber-400"
-        />
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
       <HBarChart
-        title="카테고리별 영상 수"
-        icon={<LayoutGrid size={14} className="text-blue-500" />}
-        items={catItems}
-        barColor="bg-blue-400"
+        title="조회수 TOP 10"
+        icon={<Eye size={14} className="text-red-500" />}
+        items={viewTop10}
+        barColor="bg-red-400"
+      />
+      <HBarChart
+        title="좋아요율 TOP 10"
+        icon={<ThumbsUp size={14} className="text-amber-500" />}
+        items={likeRateTop10}
+        barColor="bg-amber-400"
       />
     </div>
   );
