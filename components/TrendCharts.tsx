@@ -72,18 +72,18 @@ export default function TrendCharts({ videos }: { videos: YouTubeVideo[] }) {
   if (!videos.length) return null;
 
   const viewTop10 = [...videos]
-    .sort((a, b) => safeInt(b.viewCount) - safeInt(a.viewCount))
+    .sort((a, b) => safeInt(b.statistics.viewCount) - safeInt(a.statistics.viewCount))
     .slice(0, 10)
     .map((v) => ({
       label: v.title.length > 22 ? v.title.slice(0, 22) + "…" : v.title,
-      value: safeInt(v.viewCount),
-      display: fmtCount(safeInt(v.viewCount)),
+      value: safeInt(v.statistics.viewCount),
+      display: fmtCount(safeInt(v.statistics.viewCount)),
     }));
 
   const likeRateTop10 = [...videos]
     .map((v) => {
-      const views = safeInt(v.viewCount);
-      const likes = safeInt(v.likeCount);
+      const views = safeInt(v.statistics.viewCount);
+      const likes = safeInt(v.statistics.likeCount);
       const rate = views > 0 ? (likes / views) * 100 : 0;
       return {
         label: v.title.length > 22 ? v.title.slice(0, 22) + "…" : v.title,
