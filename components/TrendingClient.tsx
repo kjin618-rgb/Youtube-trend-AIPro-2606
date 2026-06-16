@@ -8,7 +8,8 @@ import ApiKeyModal from "@/components/ApiKeyModal";
 import { useApiKey } from "@/contexts/ApiKeyContext";
 import KpiDashboard from "@/components/KpiDashboard";
 import KeywordAnalysis from "@/components/KeywordAnalysis";
-import { RefreshCw, TrendingUp, ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import TrendCharts from "@/components/TrendCharts";
+import { RefreshCw, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
 import type { YouTubeVideo } from "@/types/youtube";
 
 interface PageData {
@@ -84,13 +85,6 @@ export default function TrendingClient() {
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
             새로고침
           </button>
-          <button
-            onClick={clearApiKey}
-            title="API 키 변경"
-            className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 transition"
-          >
-            <Settings size={16} />
-          </button>
         </div>
       </div>
 
@@ -115,6 +109,7 @@ export default function TrendingClient() {
       ) : (
         <>
           <KpiDashboard videos={allVideos} />
+          <TrendCharts videos={allVideos} />
           <KeywordAnalysis videos={allVideos} />
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-sm text-gray-500">
