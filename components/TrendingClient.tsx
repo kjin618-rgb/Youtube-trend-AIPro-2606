@@ -6,6 +6,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import CountrySelector from "@/components/CountrySelector";
 import ApiKeyModal from "@/components/ApiKeyModal";
 import { useApiKey } from "@/contexts/ApiKeyContext";
+import KpiDashboard from "@/components/KpiDashboard";
 import { RefreshCw, TrendingUp, ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import type { YouTubeVideo } from "@/types/youtube";
 
@@ -112,6 +113,7 @@ export default function TrendingClient() {
         </div>
       ) : (
         <>
+          <KpiDashboard videos={allVideos} />
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <TrendingUp size={16} className="text-red-500" />
