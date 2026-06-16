@@ -5,13 +5,14 @@ import VideoCard from "@/components/VideoCard";
 import CountrySelector from "@/components/CountrySelector";
 import ApiKeyModal from "@/components/ApiKeyModal";
 import { useApiKey } from "@/contexts/ApiKeyContext";
-import { Sparkles, RefreshCw, Settings } from "lucide-react";
+import { Sparkles, RefreshCw, Settings, Info } from "lucide-react";
 import type { YouTubeVideo } from "@/types/youtube";
 
 export default function EducationClient() {
   const { apiKey, setApiKey, clearApiKey, loaded } = useApiKey();
   const [region, setRegion] = useState("KR");
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
+  const [fallback, setFallback] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,6 +20,7 @@ export default function EducationClient() {
     if (!key) return;
     setLoading(true);
     setError("");
+    setFallback(false);
     try {
       const res = await fetch(`/api/education?region=${r}&maxResults=30`, {
         headers: { "X-API-Key": key },
@@ -26,6 +28,7 @@ export default function EducationClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setVideos(data.videos);
+      setFallback(data.categoryFallback === true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "데이터 로드 실패");
     } finally {
@@ -73,6 +76,13 @@ export default function EducationClient() {
         </div>
       )}
 
+      {fallback && (
+        <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-2.5 rounded-lg mb-4 text-xs">
+          <Info size={14} className="flex-shrink-0" />
+          선택한 국가에서는 뷰티 카테고리를 지원하지 않아 전체 인기 영상을 표시합니다.
+        </div>
+      )}
+
       {loading && !videos.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 9 }).map((_, i) => (
@@ -83,7 +93,7 @@ export default function EducationClient() {
         <>
           <div className="flex items-center gap-2 mb-4 text-sm text-gray-500">
             <Sparkles size={16} className="text-pink-500" />
-            <span>뷰티 인기 영상 TOP {videos.length}</span>
+            <span>{fallback ? "전체" : "뷰티"} 인기 영상 TOP {videos.length}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {videos.map((video, i) => (

@@ -34,12 +34,29 @@ export async function fetchTrendingVideos(
   const res = await fetch(`${BASE_URL}/videos?${params}`, { cache: "no-store" });
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.error?.message || "YouTube API 요청 실패");
+    const message: string = err.error?.message || "YouTube API 요청 실패";
+    // 해당 국가에서 카테고리가 지원되지 않으면 카테고리 없이 재시도
+    if (categoryId !== "0" && (message.includes("not found") || message.includes("notFound"))) {
+      params.delete("videoCategoryId");
+      const retry = await fetch(`${BASE_URL}/videos?${params}`, { cache: "no-store" });
+      if (!retry.ok) throw new Error(message);
+      const retryData = await retry.json();
+      return buildResponse(retryData, regionCode, "0", true);
+    }
+    throw new Error(message);
   }
   const data = await res.json();
+  return buildResponse(data, regionCode, categoryId, false);
+}
 
-  const videos: YouTubeVideo[] = (data.items || []).map(
-    (item: Record<string, unknown>, index: number) => {
+function buildResponse(
+  data: Record<string, unknown>,
+  regionCode: string,
+  categoryId: string,
+  categoryFallback: boolean
+): TrendingResponse {
+  const videos: YouTubeVideo[] = ((data.items as Record<string, unknown>[]) || []).map(
+    (item, index) => {
       const snippet = item.snippet as Record<string, unknown>;
       const statistics = item.statistics as Record<string, unknown>;
       const contentDetails = item.contentDetails as Record<string, unknown>;
@@ -66,10 +83,11 @@ export async function fetchTrendingVideos(
 
   return {
     videos,
-    nextPageToken: data.nextPageToken,
-    totalResults: data.pageInfo?.totalResults || 0,
+    nextPageToken: data.nextPageToken as string | undefined,
+    totalResults: ((data.pageInfo as Record<string, unknown>)?.totalResults as number) || 0,
     regionCode,
     categoryId,
+    categoryFallback,
   };
 }
 

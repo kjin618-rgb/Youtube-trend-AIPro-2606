@@ -44,6 +44,7 @@ export interface TrendingResponse {
   totalResults: number;
   regionCode: string;
   categoryId: string;
+  categoryFallback?: boolean;
 }
 
 export interface CommentsResponse {
